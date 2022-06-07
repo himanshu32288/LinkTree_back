@@ -1,6 +1,8 @@
-const express = require("expres");
+const express = require("express");
 const { CreateLink } = require("../controllers/LinkControllers");
 
 const router = express.Router();
 
-router.get("/createlink", CreateLink);
+router.post("/createlink", CreateLink);
+
+module.exports = router;

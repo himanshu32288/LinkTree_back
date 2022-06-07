@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const HttpError = require("../models/http-error");
-const User = require("../models/user");
+const User = require("../models/userSchema");
 
 const signup = async (req, res, next) => {
   const errors = validationResult(req);
@@ -13,7 +13,7 @@ const signup = async (req, res, next) => {
     );
   }
 
-  const { name, email, password } = req.body;
+  const { name, email, password, image } = req.body;
 
   let existingUser;
   try {
@@ -48,7 +48,7 @@ const signup = async (req, res, next) => {
   const createdUser = new User({
     name,
     email,
-    image: req.file.path,
+    image,
     password: hashedPassword,
     places: [],
   });
@@ -147,6 +147,5 @@ const login = async (req, res, next) => {
   });
 };
 
-exports.getUsers = getUsers;
 exports.signup = signup;
 exports.login = login;

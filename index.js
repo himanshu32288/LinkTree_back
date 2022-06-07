@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const app = express();
 const LinkRoutes = require("./routes/linkRoutes");
+const UsersRoutes = require("./routes/usersRoutes");
 app.use(bodyParser.json({ limit: "16mb" }));
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -17,6 +18,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/links", LinkRoutes);
+app.use("/user/", UsersRoutes);
 mongoose
   .connect(
     `mongodb+srv://himanshu20:xtreme20@cluster0.dumxb.mongodb.net/linktree?retryWrites=true&w=majority`
