@@ -45,4 +45,43 @@ const CreateLink = async (req, res, next) => {
   res.status(200).json({ message: "Success" });
 };
 
+const DeleteLink = async (req, res, next) => {
+  const { linkId, userId } = req.body;
+  let userLink;
+  try {
+    userLink = await Link.findById(linkId).populate("creator");
+  } catch (err) {
+    const error = new HttpError(
+      "Something went wrong, could not delete Link.",
+      500
+    );
+    return next(error);
+  }
+
+  if (!userLink) {
+    const error = new HttpError("Could not find Link for this id.", 404);
+    return next(error);
+  }
+  if (userLink.creator._id != userId) {
+    const error = new HttpError("You are not allowed to edit this Link.", 401);
+    return next(error);
+  }
+
+  try {
+    const sess = await mongoose.startSession();
+    sess.startTransaction();
+    await userLink.remove({ session: sess });
+    await userLink.creator.links.pull(userLink._id);
+    await userLink.creator.save({ session: sess });
+    await userLink.save();
+    await sess.commitTransaction();
+  } catch (err) {
+    const error = new HttpError(err, 500);
+    return next(error);
+  }
+
+  res.status(200).json({ message: "Deleted Link." });
+};
+
 exports.CreateLink = CreateLink;
+exports.DeleteLink = DeleteLink;
