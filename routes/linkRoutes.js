@@ -1,8 +1,8 @@
 const express = require("express");
-const { CreateLink, DeleteLink } = require("../controllers/LinkControllers");
+const { createLink, deleteLink } = require("../controllers/LinkControllers");
 
 const router = express.Router();
 
-router.post("/createlink", CreateLink);
-router.delete("/delete", DeleteLink);
+router.post("/createlink", createLink);
+router.delete("/delete", deleteLink);
 module.exports = router;
