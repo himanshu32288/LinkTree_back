@@ -8,7 +8,7 @@ const linkSchema = new Schema({
   link: { type: String, required: true },
   date: { type: Date, default: Date.now },
   clickCount: { type: Number, default: 0 },
-  likeCount: { type: Number, default: 0 },
+  savedCount: { type: Number, default: 0 },
   creator: { type: mongoose.Types.ObjectId, ref: "User" },
 });
 module.exports = mongoose.model("Link", linkSchema);

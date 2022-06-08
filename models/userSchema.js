@@ -9,6 +9,7 @@ const userSchema = new Schema({
   image: { type: String },
   groups: [{ type: mongoose.Types.ObjectId, ref: "Group" }],
   links: [{ type: mongoose.Types.ObjectId, ref: "Link" }],
+  savedLink: [{ type: mongoose.Types.ObjectId, ref: "Link" }],
 });
 
 userSchema.plugin(uniqueValidator);

@@ -2,6 +2,9 @@ const User = require("../models/userSchema");
 const Link = require("../models/linkSchema");
 const HttpError = require("../models/http-error");
 const mongoose = require("mongoose");
+/* 
+2.Increase Click Count fire a function which will efficiently update click count
+*/
 const createLink = async (req, res, next) => {
   const { label, image, link, creator } = req.body;
 
@@ -45,6 +48,33 @@ const createLink = async (req, res, next) => {
   res.status(200).json({ message: "Success" });
 };
 
+const updateLink = async (req, res, next) => {
+  const { linkId, label, image, link, userId } = req.body;
+  let userLink;
+  try {
+    userLink = await Link.findById(linkId).populate("creator");
+  } catch (err) {
+    const error = new HttpError(
+      "Something went wrong, could not Edit Link.",
+      500
+    );
+    return next(error);
+  }
+  //input Valdation
+  if (!label || label.length < 3 || !link)
+    return next(new HttpError("Invalid Input", 500));
+  //Is owner of the Link
+  if (userLink.creator._id != userId) {
+    const error = new HttpError("You are not allowed to edit this Link.", 401);
+    return next(error);
+  }
+  userLink.label = label;
+  userLink.image = image;
+  userLink.link = link;
+  await userLink.save();
+  res.status(200).json({ message: "Link Updated!" });
+};
+
 const deleteLink = async (req, res, next) => {
   const { linkId, userId } = req.body;
   let userLink;
@@ -82,5 +112,64 @@ const deleteLink = async (req, res, next) => {
   res.status(200).json({ message: "Deleted Link." });
 };
 
+const saveLink = async (req, res, next) => {
+  const { linkId, userId } = req.body;
+  let saveLink;
+  try {
+    saveLink = await Link.findById(linkId);
+  } catch (err) {
+    const error = new HttpError(
+      "Something went wrong, could not delete Link.",
+      500
+    );
+    return next(error);
+  }
+  let user;
+  try {
+    user = await User.findById(userId);
+  } catch (err) {
+    const error = new HttpError("Saving Link failed, please try again.", 500);
+    return next(error);
+  }
+  if (!user) {
+    const error = new HttpError("You must Login First.", 401);
+    return next(error);
+  }
+  try {
+    user.savedLink.push(saveLink);
+    await user.save();
+  } catch (err) {
+    const error = new HttpError("Saving Link Failed.", 500);
+    return next(error);
+  }
+  try {
+    saveLink.savedCount = saveLink.savedCount + 1;
+    await saveLink.save();
+  } catch (err) {
+    const error = new HttpError("Saving Link Failed.", 500);
+    return next(error);
+  }
+  res.status(200).json({ message: "Succes" });
+};
+
+const increaseClick = async (req, res, next) => {
+  const { linkId } = req.body;
+  let saveLink;
+  try {
+    saveLink = await Link.findById(linkId);
+  } catch (err) {
+    const error = new HttpError(
+      "Something went wrong, could not delete Link.",
+      500
+    );
+    return next(error);
+  }
+  saveLink.clickCount = saveLink.clickCount + 1;
+  await saveLink.save();
+  res.status(200).json({ message: "success" });
+};
 exports.createLink = createLink;
 exports.deleteLink = deleteLink;
+exports.updateLink = updateLink;
+exports.saveLink = saveLink;
+exports.increaseClick = increaseClick;
