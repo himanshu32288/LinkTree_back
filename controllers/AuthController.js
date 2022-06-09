@@ -13,8 +13,16 @@ const signup = async (req, res, next) => {
     );
   }
 
-  const { name, email, password, image } = req.body;
-
+  const {
+    name,
+    email,
+    password,
+    image,
+    facebook,
+    instagram,
+    linkedin,
+    twitter,
+  } = req.body;
   let existingUser;
   try {
     existingUser = await User.findOne({ email: email });
@@ -49,6 +57,10 @@ const signup = async (req, res, next) => {
     name,
     email,
     image,
+    facebook,
+    instagram,
+    linkedin,
+    twitter,
     password: hashedPassword,
     places: [],
   });

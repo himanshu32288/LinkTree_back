@@ -9,6 +9,10 @@ const userSchema = new Schema({
   image: { type: String },
   groups: [{ type: mongoose.Types.ObjectId, ref: "Group" }],
   links: [{ type: mongoose.Types.ObjectId, ref: "Link" }],
+  facebook: { type: String, default: null },
+  instagram: { type: String, default: null },
+  linkedin: { type: String, default: null },
+  twitter: { type: String, default: null },
   savedLink: [{ type: mongoose.Types.ObjectId, ref: "Link" }],
 });
 

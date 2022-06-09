@@ -3,7 +3,9 @@ const Link = require("../models/linkSchema");
 const HttpError = require("../models/http-error");
 const mongoose = require("mongoose");
 /* 
-2.Increase Click Count fire a function which will efficiently update click count
+1.Create group Link
+2.Create add functionality
+3.Remove Functionality
 */
 const createLink = async (req, res, next) => {
   const { label, image, link, creator } = req.body;
@@ -16,7 +18,7 @@ const createLink = async (req, res, next) => {
 
   const CreatedLink = new Link({
     label,
-    image,
+    image: !!image ? image : null,
     link,
     creator,
     date: indianDate,
@@ -49,7 +51,8 @@ const createLink = async (req, res, next) => {
 };
 
 const updateLink = async (req, res, next) => {
-  const { linkId, label, image, link, userId } = req.body;
+  const { label, image, link, userId } = req.body;
+  const { linkId } = req.params;
   let userLink;
   try {
     userLink = await Link.findById(linkId).populate("creator");
@@ -113,13 +116,14 @@ const deleteLink = async (req, res, next) => {
 };
 
 const saveLink = async (req, res, next) => {
-  const { linkId, userId } = req.body;
+  const { userId } = req.body;
+  const { linkId } = req.params;
   let saveLink;
   try {
     saveLink = await Link.findById(linkId);
   } catch (err) {
     const error = new HttpError(
-      "Something went wrong, could not delete Link.",
+      "Something went wrong, could not save Link.",
       500
     );
     return next(error);
@@ -153,7 +157,7 @@ const saveLink = async (req, res, next) => {
 };
 
 const increaseClick = async (req, res, next) => {
-  const { linkId } = req.body;
+  const { linkId } = req.params;
   let saveLink;
   try {
     saveLink = await Link.findById(linkId);
@@ -168,8 +172,25 @@ const increaseClick = async (req, res, next) => {
   await saveLink.save();
   res.status(200).json({ message: "success" });
 };
+const createGroup = async (req, res, next) => {
+  const {} = req.body;
+};
+const addLinkToGroup = async (req, res, next) => {
+  const {} = req.body;
+};
+const removeLinkfromGrup = async (req, res, next) => {
+  const {} = req.body;
+};
+const deleteGroup = async (req, res, next) => {
+  const {} = req.body;
+};
+
 exports.createLink = createLink;
 exports.deleteLink = deleteLink;
 exports.updateLink = updateLink;
 exports.saveLink = saveLink;
 exports.increaseClick = increaseClick;
+exports.createGroup = createGroup;
+exports.addLinkToGroup = addLinkToGroup;
+exports.removeLinkfromGrup = removeLinkfromGrup;
+exports.deleteGroup = deleteGroup;
