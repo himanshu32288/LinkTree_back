@@ -267,7 +267,40 @@ const removeLinkfromGrup = async (req, res, next) => {
   res.status(200).json({ message: "Success" });
 };
 const deleteGroup = async (req, res, next) => {
-  const {} = req.body;
+  const { groupId, userId } = req.body;
+  let userGroup;
+  try {
+    userGroup = await Link.findById(groupId).populate("creator");
+  } catch (err) {
+    const error = new HttpError(
+      "Something went wrong, could not delete Link.",
+      500
+    );
+    return next(error);
+  }
+
+  if (!userGroup) {
+    const error = new HttpError("Could not find Group for this id.", 404);
+    return next(error);
+  }
+  if (userGroup.creator._id != userId) {
+    const error = new HttpError("You are not allowed to edit this Link.", 401);
+    return next(error);
+  }
+  try {
+    const sess = await mongoose.startSession();
+    sess.startTransaction();
+    await userGroup.remove({ session: sess });
+    await userGroup.links.pull({});
+    await userGroup.links.save({ session: sess });
+    await userGroup.save();
+    await sess.commitTransaction();
+  } catch (err) {
+    const error = new HttpError(err, 500);
+    return next(error);
+  }
+
+  res.status(200).json({ message: "Deleted Group." });
 };
 
 exports.createLink = createLink;
