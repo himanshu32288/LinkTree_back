@@ -2,8 +2,8 @@ const User = require("../models/userSchema");
 const Link = require("../models/linkSchema");
 const HttpError = require("../models/http-error");
 const mongoose = require("mongoose");
+const Group = require("../models/groupSchema");
 /* 
-1.Create group Link
 2.Create add functionality
 3.Remove Functionality
 */
@@ -14,7 +14,7 @@ const createLink = async (req, res, next) => {
     return next(new HttpError("Invalid Input", 500));
 
   let date = new Date();
-  let indianDate = date.toLocaleString("en-US", "Asia/Delhi");
+  let indianDate = date.toLocaleString("en-US", { timeZone: "IST" });
 
   const CreatedLink = new Link({
     label,
@@ -35,7 +35,6 @@ const createLink = async (req, res, next) => {
     const error = new HttpError("Could not find user for provided id.", 404);
     return next(error);
   }
-
   try {
     const sess = await mongoose.startSession();
     sess.startTransaction();
@@ -172,11 +171,72 @@ const increaseClick = async (req, res, next) => {
   await saveLink.save();
   res.status(200).json({ message: "success" });
 };
+
 const createGroup = async (req, res, next) => {
-  const {} = req.body;
+  const { label, image, creator } = req.body;
+  let date = new Date().toLocaleString("en-US", { timeZone: "IST" });
+  const CreatedGroup = new Group({
+    label,
+    image,
+    creator,
+    date,
+  });
+  let user;
+  try {
+    user = await User.findById(creator);
+  } catch (err) {
+    const error = new HttpError(
+      "Creating Group failed, please try again.",
+      500
+    );
+    return next(error);
+  }
+  if (!user) {
+    const error = new HttpError("Could not find user for provided id.", 404);
+    return next(error);
+  }
+
+  try {
+    const sess = await mongoose.startSession();
+    sess.startTransaction();
+    await CreatedGroup.save();
+    await user.groups.push(CreatedGroup);
+    await user.save();
+    await sess.commitTransaction();
+  } catch (err) {
+    const error = new HttpError(err, 500);
+    return next(error);
+  }
+  res.status(200).json({ message: "Success" });
 };
 const addLinkToGroup = async (req, res, next) => {
-  const {} = req.body;
+  const { userId, link, groupId, label, image } = req.body;
+  let userGroup;
+  try {
+    userGroup = await Group.findById(groupId).populate("creator", "-password");
+  } catch (err) {
+    return next(new HttpError("Something went wrong", 500));
+  }
+  if (!userGroup) {
+    return next(new HttpError("No group found", 402));
+  }
+  if (userGroup.creator._id != userId) {
+    return next(new HttpError("You are not allowed to do this action", 401));
+  }
+  let date = new Date().toLocaleString("en-US", { timeZone: "IST" });
+  const createdLink = new Link({ label, image, link, date, userId });
+  try {
+    const sess = await mongoose.startSession();
+    sess.startTransaction();
+    await userGroup.links.push(createdLink);
+    await createdLink.save();
+    await userGroup.save();
+    await sess.commitTransaction();
+  } catch (err) {
+    const error = new HttpError(err, 500);
+    return next(error);
+  }
+  res.status(200).json({ message: "Success" });
 };
 const removeLinkfromGrup = async (req, res, next) => {
   const {} = req.body;
