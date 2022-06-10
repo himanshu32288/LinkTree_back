@@ -4,7 +4,6 @@ const HttpError = require("../models/http-error");
 const mongoose = require("mongoose");
 const Group = require("../models/groupSchema");
 /* 
-2.Create add functionality
 3.Remove Functionality
 */
 const createLink = async (req, res, next) => {
@@ -239,7 +238,33 @@ const addLinkToGroup = async (req, res, next) => {
   res.status(200).json({ message: "Success" });
 };
 const removeLinkfromGrup = async (req, res, next) => {
-  const {} = req.body;
+  const { userId, linkId, groupId } = req.body;
+  let userGroup;
+  try {
+    userGroup = await Group.findById(groupId).populate(
+      "creator links",
+      "-password"
+    );
+  } catch (err) {
+    return next(new HttpError("Something went wrong", 500));
+  }
+  if (!userGroup) {
+    return next(new HttpError("No group found", 402));
+  }
+  if (userGroup.creator._id != userId) {
+    return next(new HttpError("You are not allowed to do this action", 401));
+  }
+  try {
+    const sess = await mongoose.startSession();
+    sess.startTransaction();
+    await userGroup.links.pull({ _id: linkId });
+    await userGroup.save();
+    await sess.commitTransaction();
+  } catch (err) {
+    const error = new HttpError(err, 500);
+    return next(error);
+  }
+  res.status(200).json({ message: "Success" });
 };
 const deleteGroup = async (req, res, next) => {
   const {} = req.body;
