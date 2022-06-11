@@ -240,11 +240,13 @@ const addLinkToGroup = async (req, res, next) => {
 const removeLinkfromGrup = async (req, res, next) => {
   const { userId, linkId, groupId } = req.body;
   let userGroup;
+  let linktodelete;
   try {
     userGroup = await Group.findById(groupId).populate(
       "creator links",
       "-password"
     );
+    linktodelete = await Link.findById(linkId);
   } catch (err) {
     return next(new HttpError("Something went wrong", 500));
   }
@@ -257,7 +259,8 @@ const removeLinkfromGrup = async (req, res, next) => {
   try {
     const sess = await mongoose.startSession();
     sess.startTransaction();
-    await userGroup.links.pull({ _id: linkId });
+    await userGroup.links.pull(linktodelete);
+    await linktodelete.remove();
     await userGroup.save();
     await sess.commitTransaction();
   } catch (err) {
