@@ -7,7 +7,7 @@ const getUserById = async (req, res, next) => {
   try {
     user = await User.findById(userId, "-password --savedlinks").populate(
       "links groups",
-      "-clickCount -savedCount"
+      "-clickCount -savedCount -label"
     );
   } catch (err) {
     return next(new HttpError("Something went wrong", 500));

@@ -22,6 +22,7 @@ const signup = async (req, res, next) => {
     instagram,
     linkedin,
     twitter,
+    username,
   } = req.body;
   let existingUser;
   try {
@@ -56,6 +57,7 @@ const signup = async (req, res, next) => {
   const createdUser = new User({
     name,
     email,
+    username,
     image,
     facebook,
     instagram,
@@ -158,6 +160,17 @@ const login = async (req, res, next) => {
     token: token,
   });
 };
-
+const checkUserExist = async (req, res, next) => {
+  const { username } = req.params;
+  let user;
+  try {
+    user = await user.findOne({ username });
+  } catch (err) {
+    const error = new HttpError("Something went wrong", 500);
+    return next(error);
+  }
+  res.status(200).json({ hasUser: !!user });
+};
 exports.signup = signup;
 exports.login = login;
+exports.checkUserExist = checkUserExist;
