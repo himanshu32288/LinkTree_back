@@ -8,7 +8,6 @@ const {
 } = require("../controllers/LinkControllers");
 
 const router = express.Router();
-
 router.get("/count/:linkId", increaseClick);
 router.patch("/update/:linkId", updateLink);
 router.post("/createlink", createLink);

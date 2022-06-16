@@ -4,7 +4,7 @@ const HttpError = require("../models/http-error");
 const mongoose = require("mongoose");
 
 /* 
-@Himanshu Kumar
+
 input->label, image, link, creatorId
 functionality
 Add links
@@ -52,7 +52,7 @@ const createLink = async (req, res, next) => {
 };
 
 /* 
-@Himanshu Kumar
+
 input->label, image, link, userId
 functionality
 Check editor is owner
@@ -87,7 +87,7 @@ const updateLink = async (req, res, next) => {
 };
 
 /* 
-@Himanshu Kumar
+
 input->linkId, userId
 functionality
 Check editor is owner
@@ -132,7 +132,7 @@ const deleteLink = async (req, res, next) => {
 };
 
 /* 
-@Himanshu Kumar
+
 input->userId,linkid
 functionality
 Save link to user collection
@@ -178,7 +178,7 @@ const saveLink = async (req, res, next) => {
   res.status(200).json({ message: "Succes" });
 };
 /* 
-@Himanshu Kumar
+
 input->linkId
 functionality
 Increase Count if someone clicks on the link

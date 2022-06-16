@@ -5,7 +5,7 @@ const User = require("../models/userSchema");
 const Link = require("../models/linkSchema");
 
 /* 
-@Himanshu Kumar
+
 create group for saving related links
 input->label,image link,creater_id
 */
@@ -48,7 +48,7 @@ const createGroup = async (req, res, next) => {
 };
 
 /* 
-@Himanshu Kumar
+
 input->label,image,link,creater_id,group_id
 functionality
 validation if editor is owner the group
@@ -85,7 +85,7 @@ const addLinkToGroup = async (req, res, next) => {
 };
 
 /* 
-@Himanshu Kumar
+
 input->userId, linkId, groupId
 functionality
 validation if editor is owner the group
@@ -124,7 +124,7 @@ const removeLinkfromGrup = async (req, res, next) => {
   res.status(200).json({ message: "Success" });
 };
 /* 
-@Himanshu Kumar
+
 input->userId, groupId
 functionality
 validation if editor is owner the group
