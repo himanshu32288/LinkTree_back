@@ -5,12 +5,12 @@ const mongoose = require("mongoose");
 
 /* 
 
-input->label, image, link, creatorId
+input->label, link, creatorId
 functionality
 Add links
 */
 const createLink = async (req, res, next) => {
-  const { label, image, link, creator } = req.body;
+  const { label, link, creator } = req.body;
 
   if (!label || label.length < 3 || !link || !creator)
     return next(new HttpError("Invalid Input", 500));
@@ -20,7 +20,6 @@ const createLink = async (req, res, next) => {
 
   const CreatedLink = new Link({
     label,
-    image: !!image ? image : null,
     link,
     creator,
     date: indianDate,
@@ -53,13 +52,13 @@ const createLink = async (req, res, next) => {
 
 /* 
 
-input->label, image, link, userId
+input->label, link, userId
 functionality
 Check editor is owner
 update Link
 */
 const updateLink = async (req, res, next) => {
-  const { label, image, link, userId } = req.body;
+  const { label, link, userId } = req.body;
   const { linkId } = req.params;
   let userLink;
   try {
@@ -80,7 +79,6 @@ const updateLink = async (req, res, next) => {
     return next(error);
   }
   userLink.label = label;
-  userLink.image = image;
   userLink.link = link;
   await userLink.save();
   res.status(200).json({ message: "Link Updated!" });

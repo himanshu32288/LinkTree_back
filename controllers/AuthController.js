@@ -160,6 +160,7 @@ const login = async (req, res, next) => {
     token: token,
   });
 };
+
 const checkUserExist = async (req, res, next) => {
   const { username } = req.params;
   let user;
@@ -171,6 +172,7 @@ const checkUserExist = async (req, res, next) => {
   }
   res.status(200).json({ hasUser: !!user });
 };
+
 exports.signup = signup;
 exports.login = login;
 exports.checkUserExist = checkUserExist;

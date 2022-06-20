@@ -4,7 +4,6 @@ const Schema = mongoose.Schema;
 
 const linkSchema = new Schema({
   label: { type: String, required: true },
-  image: { type: String, default: null },
   link: { type: String, required: true },
   date: { type: Date, default: Date.now },
   clickCount: { type: Number, default: 0 },

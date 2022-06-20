@@ -7,14 +7,14 @@ const Link = require("../models/linkSchema");
 /* 
 
 create group for saving related links
-input->label,image link,creater_id
+input->label,icon link,creater_id
 */
 const createGroup = async (req, res, next) => {
-  const { label, image, creator } = req.body;
+  const { label, icon, creator } = req.body;
   let date = new Date().toLocaleString("en-US", { timeZone: "IST" });
   const CreatedGroup = new Group({
     label,
-    image,
+    icon,
     creator,
     date,
   });
@@ -49,13 +49,13 @@ const createGroup = async (req, res, next) => {
 
 /* 
 
-input->label,image,link,creater_id,group_id
+input->label,icon,link,creater_id,group_id
 functionality
 validation if editor is owner the group
 Push link to group
 */
 const addLinkToGroup = async (req, res, next) => {
-  const { userId, link, groupId, label, image } = req.body;
+  const { userId, link, groupId, label, icon } = req.body;
   let userGroup;
   try {
     userGroup = await Group.findById(groupId).populate("creator", "-password");
@@ -69,7 +69,7 @@ const addLinkToGroup = async (req, res, next) => {
     return next(new HttpError("You are not allowed to do this action", 401));
   }
   let date = new Date().toLocaleString("en-US", { timeZone: "IST" });
-  const createdLink = new Link({ label, image, link, date, userId });
+  const createdLink = new Link({ label, icon, link, date, userId });
   try {
     const sess = await mongoose.startSession();
     sess.startTransaction();

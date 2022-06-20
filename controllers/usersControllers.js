@@ -1,11 +1,11 @@
 const User = require("../models/userSchema");
 const HttpError = require("../models/http-error");
 
-const getUserById = async (req, res, next) => {
-  const { userId } = req.params;
+const getUserByUserName = async (req, res, next) => {
+  const { username } = req.params;
   let user;
   try {
-    user = await User.findById(userId, "-password --savedlinks").populate(
+    user = await User.findById(username, "-password --savedlinks").populate(
       "links groups",
       "-clickCount -savedCount -label"
     );
@@ -15,4 +15,4 @@ const getUserById = async (req, res, next) => {
   res.status(200).json({ user });
 };
 
-exports.getUserById = getUserById;
+exports.getUserByUserName = getUserByUserName;
