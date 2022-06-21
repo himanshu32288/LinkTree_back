@@ -8,6 +8,7 @@ const userSchema = new Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true, minlength: 6 },
   image: { type: String },
+  bio: { Type: String },
   groups: [{ type: mongoose.Types.ObjectId, ref: "Group" }],
   links: [{ type: mongoose.Types.ObjectId, ref: "Link" }],
   facebook: { type: String, default: null },
