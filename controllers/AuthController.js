@@ -13,7 +13,7 @@ const signup = async (req, res, next) => {
     );
   }
 
-  const { name, email, password, image, username } = req.body;
+  const { name, email, password, username } = req.body;
   let existingUser;
   try {
     existingUser = await User.findOne({ email: email });
@@ -27,7 +27,7 @@ const signup = async (req, res, next) => {
 
   if (existingUser) {
     const error = new HttpError(
-      "User exists already, please login instead.",
+      "User Email exists already, please login instead.",
       422
     );
     return next(error);
@@ -66,9 +66,11 @@ const signup = async (req, res, next) => {
   let token;
   try {
     token = jwt.sign(
-      { userId: createdUser.id, email: createdUser.email },
-      "supersecret_dont_share",
-      { expiresIn: "1h" }
+      { username: createdUser.username, email: createdUser.email },
+      process.env.SECRET,
+      {
+        expiresIn: "7d",
+      }
     );
   } catch (err) {
     const error = new HttpError(
@@ -78,9 +80,7 @@ const signup = async (req, res, next) => {
     return next(error);
   }
 
-  res
-    .status(201)
-    .json({ userId: createdUser.id, email: createdUser.email, token: token });
+  res.status(201).json({ token: token });
 };
 
 const login = async (req, res, next) => {
@@ -128,9 +128,9 @@ const login = async (req, res, next) => {
   let token;
   try {
     token = jwt.sign(
-      { userId: existingUser.id, email: existingUser.email },
-      "supersecret_dont_share",
-      { expiresIn: "1h" }
+      { username: existingUser.username, email: existingUser.email },
+      process.env.SECRET,
+      { expiresIn: "7d" }
     );
   } catch (err) {
     const error = new HttpError(
@@ -140,11 +140,7 @@ const login = async (req, res, next) => {
     return next(error);
   }
 
-  res.json({
-    userId: existingUser.id,
-    email: existingUser.email,
-    token: token,
-  });
+  res.json({ token });
 };
 
 const checkUserExist = async (req, res, next) => {

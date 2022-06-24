@@ -22,9 +22,7 @@ app.use("/links", LinkRoutes);
 app.use("/group", groupRoutes);
 app.use("/user/", UsersRoutes);
 mongoose
-  .connect(
-    `mongodb+srv://himanshu20:xtreme20@cluster0.dumxb.mongodb.net/linktree?retryWrites=true&w=majority`
-  )
+  .connect(process.env.MONGO_URL)
   .then(() => {
     app.listen(5000);
   })
