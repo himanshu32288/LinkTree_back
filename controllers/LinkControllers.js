@@ -10,17 +10,11 @@ functionality
 Add links
 */
 const createLink = async (req, res, next) => {
-  const { label, link, creator } = req.body;
-
-  if (!label || label.length < 3 || !link || !creator)
-    return next(new HttpError("Invalid Input", 500));
-
+  const { creator } = req.body;
   let date = new Date();
   let indianDate = date.toLocaleString("en-US", { timeZone: "IST" });
 
   const CreatedLink = new Link({
-    label,
-    link,
     creator,
     date: indianDate,
   });
