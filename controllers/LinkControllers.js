@@ -2,13 +2,14 @@ const User = require("../models/userSchema");
 const Link = require("../models/linkSchema");
 const HttpError = require("../models/http-error");
 const mongoose = require("mongoose");
+const ObjectId = require("mongoose").Types.ObjectId;
 
 /* 
-
 input->label, link, creatorId
 functionality
 Add links
 */
+
 const createLink = async (req, res, next) => {
   const { creator } = req.body;
   let date = new Date();
@@ -41,7 +42,7 @@ const createLink = async (req, res, next) => {
     const error = new HttpError(err, 500);
     return next(error);
   }
-  res.status(200).json({ message: "Success" });
+  res.status(200).json({ link: CreatedLink });
 };
 
 /* 
@@ -192,8 +193,24 @@ const increaseClick = async (req, res, next) => {
   res.status(200).json({ message: "success" });
 };
 
+const getLinksByUserId = async (req, res, next) => {
+  const { userId } = req.params;
+  let links;
+  try {
+    links = await Link.find({ creator: ObjectId(userId) });
+  } catch (err) {
+    const error = new HttpError(err, 500);
+    return next(error);
+  }
+  if (!links) {
+    const error = new HttpError("Could not find Link for this id.", 404);
+    return next(error);
+  }
+  res.status(200).json({ links });
+};
 exports.createLink = createLink;
 exports.deleteLink = deleteLink;
 exports.updateLink = updateLink;
 exports.saveLink = saveLink;
 exports.increaseClick = increaseClick;
+exports.getLinksByUserId = getLinksByUserId;

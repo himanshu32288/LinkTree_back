@@ -5,6 +5,8 @@ const app = express();
 const LinkRoutes = require("./routes/linkRoutes");
 const UsersRoutes = require("./routes/usersRoutes");
 const groupRoutes = require("./routes/groupRoutes");
+require("dotenv").config();
+
 app.use(bodyParser.json({ limit: "16mb" }));
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -17,10 +19,10 @@ app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE");
   next();
 });
-
 app.use("/links", LinkRoutes);
 app.use("/group", groupRoutes);
 app.use("/user/", UsersRoutes);
+
 mongoose
   .connect(process.env.MONGO_URL)
   .then(() => {

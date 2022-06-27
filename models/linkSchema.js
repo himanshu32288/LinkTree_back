@@ -8,7 +8,7 @@ const linkSchema = new Schema({
   date: { type: Date, default: Date.now },
   clickCount: { type: Number, default: 0 },
   thumbnail: { type: String, default: "" },
-  disabled: { type: Boolean, default: false },
+  active: { type: Boolean, default: false },
   savedCount: { type: Number, default: 0 },
   creator: { type: mongoose.Types.ObjectId, ref: "User" },
 });

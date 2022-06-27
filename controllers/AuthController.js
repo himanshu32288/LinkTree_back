@@ -13,7 +13,7 @@ const signup = async (req, res, next) => {
     );
   }
 
-  const { name, email, password, username } = req.body;
+  const { email, password, username } = req.body;
   let existingUser;
   try {
     existingUser = await User.findOne({ email: email });
@@ -45,12 +45,9 @@ const signup = async (req, res, next) => {
   }
 
   const createdUser = new User({
-    name,
     email,
     username,
-    image,
     password: hashedPassword,
-    places: [],
   });
 
   try {
@@ -84,12 +81,14 @@ const signup = async (req, res, next) => {
 };
 
 const login = async (req, res, next) => {
-  const { email, password } = req.body;
+  const { userNameOrEmail, password } = req.body;
 
   let existingUser;
 
   try {
-    existingUser = await User.findOne({ email: email });
+    existingUser = await User.findOne({
+      $or: [{ email: userNameOrEmail }, { username: userNameOrEmail }],
+    });
   } catch (err) {
     const error = new HttpError(
       "Logging in failed, please try again later.",
