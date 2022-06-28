@@ -66,8 +66,7 @@ const updateLink = async (req, res, next) => {
     return next(error);
   }
   //input Valdation
-  if (!label || label.length < 3 || !link)
-    return next(new HttpError("Invalid Input", 500));
+
   //Is owner of the Link
   if (userLink.creator._id != userId) {
     const error = new HttpError("You are not allowed to edit this Link.", 401);
@@ -104,7 +103,7 @@ const deleteLink = async (req, res, next) => {
     const error = new HttpError("Could not find Link for this id.", 404);
     return next(error);
   }
-  console.log(userLink.creator._id, userId);
+
   if (userLink.creator._id != userId) {
     const error = new HttpError("You are not allowed to edit this Link.", 401);
     return next(error);
