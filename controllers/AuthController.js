@@ -2,6 +2,7 @@ const { validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { v4 } = require("uuid");
+const { sendMail } = require("../utils/sendMail");
 const HttpError = require("../models/http-error");
 const User = require("../models/userSchema");
 
@@ -62,7 +63,19 @@ const signup = async (req, res, next) => {
     );
     return next(error);
   }
-
+  //Sending Mail
+  try {
+    sendMail({
+      to: email,
+      from: "himanshukumar_2k19co159@dtu.ac.in",
+      subject: "Verify Email",
+      text: `Thanks for signing up!To verify your email click on the below link
+https://localhost:3000/verify-email/${verificationString}
+      `,
+    });
+  } catch (err) {
+    throw new Error(err);
+  }
   let token;
   try {
     token = jwt.sign(
