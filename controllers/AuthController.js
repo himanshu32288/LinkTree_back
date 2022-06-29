@@ -1,7 +1,7 @@
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-
+const { v4 } = require("uuid");
 const HttpError = require("../models/http-error");
 const User = require("../models/userSchema");
 
@@ -43,10 +43,13 @@ const signup = async (req, res, next) => {
     );
     return next(error);
   }
+  //Verificationn String
+  const verificationString = v4();
 
   const createdUser = new User({
     email,
     username,
+    verificationString,
     password: hashedPassword,
   });
 

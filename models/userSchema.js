@@ -15,6 +15,8 @@ const userSchema = new Schema({
   linkedin: { type: String, default: null },
   twitter: { type: String, default: null },
   savedLink: [{ type: mongoose.Types.ObjectId, ref: "Link" }],
+  isVerfied: { type: Boolean, default: false },
+  verificationString: { type: String, required: true },
 });
 
 userSchema.plugin(uniqueValidator);
