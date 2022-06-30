@@ -16,7 +16,7 @@ const userSchema = new Schema({
   twitter: { type: String, default: null },
   savedLink: [{ type: mongoose.Types.ObjectId, ref: "Link" }],
   isVerfied: { type: Boolean, default: false },
-  verificationString: { type: String, required: true },
+  verificationString: { type: String },
 });
 
 userSchema.plugin(uniqueValidator);

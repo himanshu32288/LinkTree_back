@@ -5,9 +5,9 @@ const {
   removeLinkfromGrup,
   deleteGroup,
 } = require("../controllers/groupControllers");
-
+const checkAuth = require("../middleware/authmiddleware");
 const router = express.Router();
-
+router.use(checkAuth);
 router.post("/creategroup", createGroup);
 router.post("/addlinktogroup", addLinkToGroup);
 router.delete("/deletelinkfromgroup", removeLinkfromGrup);

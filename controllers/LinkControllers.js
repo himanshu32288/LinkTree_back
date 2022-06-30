@@ -11,7 +11,7 @@ Add links
 */
 
 const createLink = async (req, res, next) => {
-  const { creator } = req.body;
+  const creator = req.decodedToken.userId;
   let date = new Date();
   let indianDate = date.toLocaleString("en-US", { timeZone: "IST" });
 
@@ -53,8 +53,9 @@ Check editor is owner
 update Link
 */
 const updateLink = async (req, res, next) => {
-  const { label, link, userId } = req.body;
+  const { label, link } = req.body;
   const { linkId } = req.params;
+  const userId = req.decodedToken.userId;
   let userLink;
   try {
     userLink = await Link.findById(linkId).populate("creator");
@@ -87,7 +88,8 @@ delete Link
 */
 
 const deleteLink = async (req, res, next) => {
-  const { linkId, userId } = req.body;
+  const { linkId } = req.body;
+  const userId = req.decodedToken.userId;
   let userLink;
   try {
     userLink = await Link.findById(linkId).populate("creator");
@@ -130,7 +132,7 @@ functionality
 Save link to user collection
 */
 const saveLink = async (req, res, next) => {
-  const { userId } = req.body;
+  const userId = req.decodedToken.userId;
   const { linkId } = req.params;
   let saveLink;
   try {

@@ -5,6 +5,7 @@ const app = express();
 const LinkRoutes = require("./routes/linkRoutes");
 const UsersRoutes = require("./routes/usersRoutes");
 const groupRoutes = require("./routes/groupRoutes");
+const { decodeToken } = require("./controllers/decodeToken");
 require("dotenv").config();
 
 app.use(bodyParser.json({ limit: "16mb" }));

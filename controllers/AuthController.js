@@ -79,7 +79,11 @@ https://localhost:3000/verify-email/${verificationString}
   let token;
   try {
     token = jwt.sign(
-      { username: createdUser.username, email: createdUser.email },
+      {
+        username: createdUser.username,
+        email: createdUser.email,
+        userId: createdUser._id,
+      },
       process.env.SECRET,
       {
         expiresIn: "7d",
@@ -143,7 +147,11 @@ const login = async (req, res, next) => {
   let token;
   try {
     token = jwt.sign(
-      { username: existingUser.username, email: existingUser.email },
+      {
+        username: existingUser.username,
+        email: existingUser.email,
+        userId: existingUser._id,
+      },
       process.env.SECRET,
       { expiresIn: "7d" }
     );

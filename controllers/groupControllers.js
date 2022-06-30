@@ -5,12 +5,12 @@ const User = require("../models/userSchema");
 const Link = require("../models/linkSchema");
 
 /* 
-
 create group for saving related links
 input->label,icon link,creater_id
 */
 const createGroup = async (req, res, next) => {
-  const { label, icon, creator } = req.body;
+  const { label, icon } = req.body;
+  const creator = req.decodedToken.userId;
   let date = new Date().toLocaleString("en-US", { timeZone: "IST" });
   const CreatedGroup = new Group({
     label,
@@ -55,7 +55,8 @@ validation if editor is owner the group
 Push link to group
 */
 const addLinkToGroup = async (req, res, next) => {
-  const { userId, link, groupId, label, icon } = req.body;
+  const { link, groupId, label, icon } = req.body;
+  const userId = req.decodedToken.userId;
   let userGroup;
   try {
     userGroup = await Group.findById(groupId).populate("creator", "-password");
@@ -92,7 +93,8 @@ validation if editor is owner the group
 remove link from group
 */
 const removeLinkfromGrup = async (req, res, next) => {
-  const { userId, linkId, groupId } = req.body;
+  const { linkId, groupId } = req.body;
+  const userId = req.decodedToken.userId;
   let userGroup;
   let linktodelete;
   try {
@@ -132,7 +134,8 @@ remove Group
 remove all links in the group
 */
 const deleteGroup = async (req, res, next) => {
-  const { groupId, userId } = req.body;
+  const { groupId } = req.body;
+  const userId = req.decodedToken.userId;
   let userGroup;
   let links = [];
   try {
