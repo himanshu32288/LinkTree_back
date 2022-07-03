@@ -83,6 +83,7 @@ https://localhost:3000/verify-email/${verificationString}
         username: createdUser.username,
         email: createdUser.email,
         userId: createdUser._id,
+        isVerfied: false,
       },
       process.env.SECRET,
       {
@@ -178,6 +179,54 @@ const checkUserExist = async (req, res, next) => {
   res.status(200).json({ hasUser: !!user });
 };
 
+const verifyEmail = async (req, res, next) => {
+  const { verificationString } = req.body;
+  let user;
+  try {
+    user = await User.findOne({ verificationString });
+  } catch (err) {
+    const error = new HttpError(
+      "Signing up failed, please try again later.",
+      500
+    );
+    return next(error);
+  }
+  if (!user) {
+    res
+      .status(401)
+      .json({ message: "The email verification code is incorrect" });
+  }
+  try {
+    user.isVerfied = true;
+    await user.save();
+  } catch (err) {
+    res.status(404).json({ message: "Try Again!" });
+  }
+  const { username, email, _id } = user;
+  try {
+    token = jwt.sign(
+      {
+        username,
+        email,
+        userId: _id,
+        isVerfied: true,
+      },
+      process.env.SECRET,
+      {
+        expiresIn: "7d",
+      }
+    );
+  } catch (err) {
+    const error = new HttpError(
+      "Signing up failed, please try again later.",
+      500
+    );
+    return next(error);
+  }
+
+  res.status(201).json({ token: token });
+};
 exports.signup = signup;
 exports.login = login;
 exports.checkUserExist = checkUserExist;
+exports.verifyEmail = verifyEmail;
