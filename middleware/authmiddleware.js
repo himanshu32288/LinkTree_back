@@ -12,6 +12,9 @@ module.exports = (req, res, next) => {
       throw new Error("Authentication failed!");
     }
     const decodedToken = jwt.verify(token, process.env.SECRET);
+    const { isVerified } = decodedToken;
+    if (!isVerified)
+      res.statsu(403).json({ message: "You need to verify your email first" });
     req.decodedToken = decodedToken;
     next();
   } catch (err) {

@@ -70,7 +70,7 @@ const signup = async (req, res, next) => {
       from: "himanshukumar_2k19co159@dtu.ac.in",
       subject: "Verify Email",
       text: `Thanks for signing up!To verify your email click on the below link
-https://localhost:3000/verify-email/${verificationString}
+http://localhost:3000/verify-email/${verificationString}
       `,
     });
   } catch (err) {
@@ -226,6 +226,7 @@ const verifyEmail = async (req, res, next) => {
 
   res.status(201).json({ token: token });
 };
+
 exports.signup = signup;
 exports.login = login;
 exports.checkUserExist = checkUserExist;
