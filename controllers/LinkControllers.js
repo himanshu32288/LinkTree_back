@@ -56,6 +56,7 @@ const updateLink = async (req, res, next) => {
   const { label, link } = req.body;
   const { linkId } = req.params;
   const userId = req.decodedToken.userId;
+
   let userLink;
   try {
     userLink = await Link.findById(linkId).populate("creator");
@@ -209,9 +210,34 @@ const getLinksByUserId = async (req, res, next) => {
   }
   res.status(200).json({ links });
 };
+
+const getLinksByUserName = async (req, res, next) => {
+  const { username } = req.params;
+  let user;
+  try {
+    user = await User.findOne({ username });
+  } catch (err) {
+    const error = new HttpError(err, 500);
+    return next(error);
+  }
+  if (!user) {
+    res.json({ message: "message" });
+  }
+  let links;
+  try {
+    links = await Link.find({ creator: user._id });
+  } catch (err) {
+    const error = new HttpError(err, 500);
+    return next(error);
+  }
+
+  res.status(200).json({ links });
+};
+
 exports.createLink = createLink;
 exports.deleteLink = deleteLink;
 exports.updateLink = updateLink;
 exports.saveLink = saveLink;
 exports.increaseClick = increaseClick;
 exports.getLinksByUserId = getLinksByUserId;
+exports.getLinksByUserName = getLinksByUserName;

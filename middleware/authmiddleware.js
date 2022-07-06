@@ -13,8 +13,11 @@ module.exports = (req, res, next) => {
     }
     const decodedToken = jwt.verify(token, process.env.SECRET);
     const { isVerified } = decodedToken;
-    if (!isVerified)
-      res.statsu(403).json({ message: "You need to verify your email first" });
+    if (!isVerified) {
+      return res
+        .status(403)
+        .json({ message: "You need to verify your email first" });
+    }
     req.decodedToken = decodedToken;
     next();
   } catch (err) {

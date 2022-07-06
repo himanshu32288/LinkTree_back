@@ -14,7 +14,7 @@ const signup = async (req, res, next) => {
     );
   }
 
-  const { email, password, username } = req.body;
+  const { email, password, username, name } = req.body;
   let existingUser;
   try {
     existingUser = await User.findOne({ email: email });
@@ -50,6 +50,7 @@ const signup = async (req, res, next) => {
   const createdUser = new User({
     email,
     username,
+    name,
     verificationString,
     password: hashedPassword,
   });
@@ -152,6 +153,7 @@ const login = async (req, res, next) => {
         username: existingUser.username,
         email: existingUser.email,
         userId: existingUser._id,
+        isVerified: existingUser.isVerfied,
       },
       process.env.SECRET,
       { expiresIn: "7d" }
