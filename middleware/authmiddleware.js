@@ -21,7 +21,7 @@ module.exports = (req, res, next) => {
     req.decodedToken = decodedToken;
     next();
   } catch (err) {
-    const error = new HttpError("Authentication failed!", 401);
+    const error = new HttpError(err, 401);
     return next(error);
   }
 };

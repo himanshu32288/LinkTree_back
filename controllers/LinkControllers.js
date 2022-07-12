@@ -230,8 +230,7 @@ const getLinksByUserName = async (req, res, next) => {
     const error = new HttpError(err, 500);
     return next(error);
   }
-
-  res.status(200).json({ links });
+  res.status(200).json({ links, name: "MR X" });
 };
 
 exports.createLink = createLink;
