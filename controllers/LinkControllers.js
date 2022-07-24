@@ -222,6 +222,8 @@ const getLinksByUserName = async (req, res, next) => {
   }
   if (!user) {
     res.json({ message: "message" });
+    const error = new HttpError("user not found", 500);
+    return next(error);
   }
   let links;
   try {
