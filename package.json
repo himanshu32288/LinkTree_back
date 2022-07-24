@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js --ext js"
+    "start": "node index.js --ext js",
+    "dev": "nodemon index.js --exec 'npm start -s"
   },
   "dependencies": {
     "@sendgrid/mail": "^7.7.0",
@@ -18,12 +19,15 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.3.5",
     "mongoose-unique-validator": "^3.1.0",
-    "nodemon": "^2.0.18"
+    "node": "^18.5.0"
   },
   "keywords": [
     "example",
     "heroku"
   ],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.19"
+  }
 }
