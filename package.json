@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js --ext js"
+    "start": "node index.js --ext js"
   },
   "dependencies": {
     "@sendgrid/mail": "^7.7.0",
