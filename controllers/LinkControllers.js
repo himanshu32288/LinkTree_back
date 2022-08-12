@@ -53,7 +53,7 @@ Check editor is owner
 update Link
 */
 const updateLink = async (req, res, next) => {
-  const { label, link } = req.body;
+  const { label, link, isActive } = req.body;
   const { linkId } = req.params;
   const userId = req.decodedToken.userId;
 
@@ -76,6 +76,7 @@ const updateLink = async (req, res, next) => {
   }
   userLink.label = label;
   userLink.link = link;
+  userLink.active = isActive;
   await userLink.save();
   res.status(200).json({ message: "Link Updated!" });
 };
@@ -235,6 +236,22 @@ const getLinksByUserName = async (req, res, next) => {
   res.status(200).json({ links, name: "MR X" });
 };
 
+const getSavedLinks = async (req, res, next) => {
+  const { userId } = req.decodedToken;
+  let user;
+  try {
+    user = await User.findById(userId, "-password").populate(
+      "savedLink",
+      "-clickCount -savedCount"
+    );
+  } catch (err) {
+    const error = new HttpError(err, 500);
+    return next(error);
+  }
+  const links = user.savedLink;
+  res.status(200).json({ links });
+};
+
 exports.createLink = createLink;
 exports.deleteLink = deleteLink;
 exports.updateLink = updateLink;
@@ -242,3 +259,4 @@ exports.saveLink = saveLink;
 exports.increaseClick = increaseClick;
 exports.getLinksByUserId = getLinksByUserId;
 exports.getLinksByUserName = getLinksByUserName;
+exports.getSavedLinks = getSavedLinks;

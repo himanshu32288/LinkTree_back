@@ -7,6 +7,7 @@ const {
   saveLink,
   getLinksByUserId,
   getLinksByUserName,
+  getSavedLinks,
 } = require("../controllers/LinkControllers");
 const checkAuth = require("../middleware/authmiddleware");
 const router = express.Router();
@@ -17,6 +18,7 @@ router.get("/count/:linkId", increaseClick);
 router.patch("/update/:linkId", updateLink);
 router.post("/createlink", createLink);
 router.delete("/delete", deleteLink);
-router.post("/savelink/:linkId", saveLink);
+router.get("/savelink/:linkId", saveLink);
+router.get("/getsavedlinks", getSavedLinks);
 
 module.exports = router;

@@ -86,10 +86,7 @@ http://localhost:3000/verify-email/${verificationString}
         userId: createdUser._id,
         isVerfied: false,
       },
-      process.env.SECRET,
-      {
-        expiresIn: "7d",
-      }
+      process.env.SECRET
     );
   } catch (err) {
     const error = new HttpError(
@@ -154,8 +151,7 @@ const login = async (req, res, next) => {
         userId: existingUser._id,
         isVerified: existingUser.isVerfied,
       },
-      process.env.SECRET,
-      { expiresIn: "7d" }
+      process.env.SECRET
     );
   } catch (err) {
     const error = new HttpError(
@@ -212,10 +208,7 @@ const verifyEmail = async (req, res, next) => {
         userId: _id,
         isVerfied: true,
       },
-      process.env.SECRET,
-      {
-        expiresIn: "7d",
-      }
+      process.env.SECRET
     );
   } catch (err) {
     const error = new HttpError(
